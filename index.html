@@ -256,7 +256,7 @@ h1,h2,h3,h4,.logo,.tag,.big,th,.sh,.wtag{font-family:system-ui,Segoe UI,Roboto,A
 <nav id="nav" class="tabs"><button data-v="dash" class="on">Dashboard</button><button data-v="teams">Teams</button><button data-v="players">Players</button></nav>
 <main id="app"><div class="sk"></div><div class="sk"></div></main>
 <div class="modal" id="adm"></div><div class="modal" id="pk"></div><div class="modal" id="sx"></div><div class="modal" id="dl"></div>
-<script id="mainjs" data-len="43506">
+<script id="mainjs" data-len="44204">
 (function(){
 window.__fd=1;var b=document.getElementById('st');b.style.display='none';b.textContent='';
 const API='https://script.google.com/macros/s/AKfycbwLc2JZW3leBVKkd4GCHD9AlLMzt3cdOLVF7K17ne6crZqm0tymu6xEQx6sR_hiPeyMDw/exec';
@@ -422,7 +422,11 @@ async function post(op,data){
 function lbl(){const b=$('#admb');if(b)b.innerHTML=PW?'👤 <span class="at">'+esc(ROLE==='team'?U:'Admin')+'</span>':'🔒 <span class="at">Admin</span>'}
 function openAdm(){$('#adm').classList.add('on');admR()}
 function closeAdm(){$('#adm').classList.remove('on')}
-async function login(){U=$('#un').value.trim();PW=$('#pw').value;const r=await post('login');
+async function hh(t){try{const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('scf|'+t));return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join('')}catch(_){let h=5381;for(let i=0;i<t.length;i++)h=(h*33^t.charCodeAt(i))>>>0;return 'x'+h}}
+async function login(){U=$('#un').value.trim();PW=$('#pw').value;const k=await hh(U.toLowerCase()+'|'+PW);let OL={};try{OL=JSON.parse(localStorage.olg||'{}')}catch(_){}
+  let r=await post('login');
+  if(r.ok){OL[k]={role:r.role,team:S(r.teamId||'')};try{localStorage.olg=JSON.stringify(OL)}catch(_){}}
+  else if(r.err==='No internet connection'){if(OL[k]){r={ok:true,role:OL[k].role,teamId:OL[k].team};toast('Logged in offline')}else r={ok:false,err:'Offline: log in once with internet on this device first'}}
   if(r.ok){ROLE=r.role;MYTEAM=S(r.teamId||'');AT=ROLE==='team'?'matches':'teams';ss('fds',JSON.stringify({u:U,pw:PW,role:ROLE,team:MYTEAM}));admR()}
   else{PW='';U='';ROLE='';toast(r.err||'Failed')}}
 async function act(op,data,msg){toast('Saving…');const r=await post(op,data);if(!r.ok)return toast(r.err||'Error');toast(r.queued?'Saved offline — will sync when online':(msg||'Saved ✓'));await load(true);admR()}
