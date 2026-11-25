@@ -236,6 +236,7 @@ h1,h2,h3,h4,.logo,.tag,.big,th,.sh,.wtag{font-family:system-ui,Segoe UI,Roboto,A
 .dlbox img{width:100%;max-width:560px;height:auto;border-radius:12px;display:block;margin:0 auto 12px}
 .dla{display:inline-block;text-decoration:none}
 #net{position:fixed;left:10px;bottom:10px;z-index:90;background:#c78a00;color:#fff;font:700 13px system-ui,sans-serif;padding:7px 13px;border-radius:18px;display:none;box-shadow:0 4px 14px #0008}#net.on{display:block;animation:netp .4s}#net.off{background:#c0392b}@keyframes netp{from{transform:translateY(20px);opacity:0}}
+#sub{text-align:center;color:var(--mut);font:600 clamp(12px,3vw,15px) 'Times New Roman',serif;letter-spacing:2px;text-transform:uppercase;padding:2px 12px 6px}
 </style><script>window.onerror=function(m,u,l){var e=document.getElementById("st");if(e){e.style.display="block";e.textContent+=" | "+m+" (line "+l+")"}};window.addEventListener("load",function(){if(window.__fd)return;var e=document.getElementById("st"),m=document.getElementById("mainjs");if(!e)return;e.style.display="block";e.textContent+=" [diag] scripts="+document.scripts.length+" main="+(m?m.text.length+"/"+m.getAttribute("data-len"):"MISSING")+" tail="+(m?JSON.stringify(m.text.slice(-25)):"")});</script></head><body>
 <div id="st" style="background:#ff5d6c;color:#fff;padding:8px 14px;font-size:13px;word-break:break-all">⚠ Page script did not start. Re-copy the FULL index.html (it must end with &lt;/html&gt;) and deploy a New version.</div><div class="top"><div class="tl"><svg class="lgo" viewBox="0 0 48 48" width="40" height="40"><defs><linearGradient id="gg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2dff8f"/><stop offset="1" stop-color="#00c6ff"/></linearGradient></defs><path d="M24 2 43 9v14c0 12-8 20-19 23C13 43 5 35 5 23V9z" fill="#0b1428" stroke="url(#gg)" stroke-width="2.5"/><circle cx="24" cy="24" r="11" fill="#fff"/><path d="M24 17.5l5 3.6-1.9 5.9h-6.2L19 21.1z" fill="#111"/><path d="M24 17.5V13M29 21.1l4.2-1.6M27.1 27l2.6 3.8M20.9 27l-2.6 3.8M19 21.1l-4.2-1.6" stroke="#111" stroke-width="1.6" stroke-linecap="round"/></svg></div><h1 class="ttl">SC Futsal Season 2</h1><div class="tr"><button class="adm-b" id="admb" onclick="openAdm()">🔒 <span class="at">Admin</span></button></div></div>
 <div class="scene"><div class="act ac1"><svg viewBox="0 0 640 150" role="img" aria-label="A player kicks the ball and scores"><defs><linearGradient id="gr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#16a34a"/><stop offset="1" stop-color="#0a5a2b"/></linearGradient></defs>
@@ -256,7 +257,7 @@ h1,h2,h3,h4,.logo,.tag,.big,th,.sh,.wtag{font-family:system-ui,Segoe UI,Roboto,A
 <nav id="nav" class="tabs"><button data-v="dash" class="on">Dashboard</button><button data-v="teams">Teams</button><button data-v="players">Players</button></nav>
 <main id="app"><div class="sk"></div><div class="sk"></div></main>
 <div class="modal" id="adm"></div><div class="modal" id="pk"></div><div class="modal" id="sx"></div><div class="modal" id="dl"></div>
-<script id="mainjs" data-len="44204">
+<script id="mainjs" data-len="46389">
 (function(){
 window.__fd=1;var b=document.getElementById('st');b.style.display='none';b.textContent='';
 const API='https://script.google.com/macros/s/AKfycbwLc2JZW3leBVKkd4GCHD9AlLMzt3cdOLVF7K17ne6crZqm0tymu6xEQx6sR_hiPeyMDw/exec';
@@ -277,14 +278,15 @@ const POS={GK:[50,87],LB:[20,67],CB:[50,67],RB:[80,67],LM:[16,45],CM:[50,45],RM:
 const mds=()=>[...new Set(D.matches.map(m=>N(m.matchday)))].sort((a,b)=>a-b);
 const empty=t=>`<div class="empty">${t}</div>`;
 /* ---- offline queue ---- */
-const WR={saveTeam:1,savePlayer:1,delTeam:1,delPlayer:1,saveMatch:1,delMatch:1};
+const WR={saveCfg:1,saveTeam:1,savePlayer:1,delTeam:1,delPlayer:1,saveMatch:1,delMatch:1};
 let FQ=[],FL=0;try{FQ=JSON.parse(localStorage.fq||'[]')}catch(_){}
 function net(){let e=$('#net');if(!e){e=document.createElement('div');e.id='net';document.body.appendChild(e)}const off=navigator.onLine===false;e.className=(off?'off ':'')+(off||FQ.length?'on':'');e.textContent=(off?'📴 Offline':'🔄 Syncing…')+(FQ.length?' · '+FQ.length+' pending':'')}
 function sq(){try{localStorage.fq=JSON.stringify(FQ)}catch(_){}net()}
 const lid=()=>'L'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
 function upS(a,o){const i=a.findIndex(x=>S(x.id)===S(o.id));i<0?a.push(o):a[i]=Object.assign(a[i],o)}
 function loc(op,d){
-  if(op==='saveTeam')upS(D.teams,Object.assign({},d));
+  if(op==='saveCfg')D.cfg={title:d.title,sub:d.sub};
+  else if(op==='saveTeam')upS(D.teams,Object.assign({},d));
   else if(op==='savePlayer')upS(D.players,Object.assign({},d));
   else if(op==='delTeam')D.teams=D.teams.filter(x=>S(x.id)!==S(d.id));
   else if(op==='delPlayer')D.players=D.players.filter(x=>S(x.id)!==S(d.id));
@@ -310,7 +312,11 @@ async function load(force){
     D=await call('data');FQ.forEach(q=>loc(q.op,JSON.parse(JSON.stringify(q.data))));try{localStorage.fd=JSON.stringify(D)}catch(_){}render()
   }catch(e){}
 }
+function cfgT(){return (D.cfg&&D.cfg.title)||'SC Futsal Season 2'}
+function applyCfg(){const h=$('.ttl');if(!h)return;const t=cfgT(),sb=(D.cfg&&D.cfg.sub)||'';if(h.textContent!==t)h.textContent=t;document.title=t;
+  let e=$('#sub');if(!e){e=document.createElement('div');e.id='sub';($('.scene')||h.parentNode.parentNode).insertAdjacentElement('afterend',e)}e.textContent=sb;e.style.display=sb?'block':'none'}
 function render(){
+  applyCfg();
   document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===view));
   $('#app').innerHTML=view==='dash'?dash():view==='teams'?teams():players();
   document.querySelectorAll('[data-c]').forEach(cu);
@@ -433,11 +439,18 @@ async function act(op,data,msg){toast('Saving…');const r=await post(op,data);i
 function admR(){
   const m=$('#adm');lbl();
   if(!PW){m.innerHTML=`<div class="panel" style="max-width:380px;margin-top:12vh"><h3>Login</h3><div class="row"><input id="un" placeholder="Username (blank = admin)" style="flex:1;min-width:0" autocomplete="username"></div><div class="row"><input id="pw" type="password" placeholder="Password" style="flex:1;min-width:0" onkeydown="if(event.key==='Enter')login()"><button class="btn" onclick="login()">Login</button></div><button class="btn g" onclick="closeAdm()">Close</button></div>`;return}
-  const tabs=ROLE==='team'?['matches']:['teams','players','matches','users'];
+  const tabs=ROLE==='team'?['matches']:['teams','players','matches','users','settings'];
   if(tabs.indexOf(AT)<0)AT=tabs[0];
   m.innerHTML=`<div class="panel"><div class="row"><div class="chips" style="margin:0">${ROLE==='team'?`<b>${esc(tm(MYTEAM).name)}</b> · lineup`:tabs.map(t=>`<span class="chip ${AT===t?'on':''}" onclick="setAT('${t}')">${t}</span>`).join('')}</div><span style="flex:1"></span><button class="btn g" onclick="logout()">Logout</button><button class="btn g" onclick="closeAdm()">✕</button></div><div id="ab"></div></div>`;
-  ({teams:aTeams,players:aPlayers,matches:aMatches,users:aUsers})[AT]();
+  ({teams:aTeams,players:aPlayers,matches:aMatches,users:aUsers,settings:aSettings})[AT]();
 }
+function aSettings(){const c=D.cfg||{};
+  $('#ab').innerHTML=`<h3>Dashboard heading</h3><div class="row"><input id="ct" maxlength="60" placeholder="Tournament name" value="${esc(c.title||'SC Futsal Season 2')}" style="flex:1;min-width:0"></div><div class="row"><input id="cs" maxlength="80" placeholder="Subtitle (e.g. Season 2 · Sunday League · Venue)" value="${esc(c.sub||'')}" style="flex:1;min-width:0"><button class="btn" onclick="saveCfg()">Save</button></div><h3 style="margin-top:18px">Change admin password</h3><div class="row"><input id="np" type="password" placeholder="New password (min 6)" autocomplete="new-password" style="flex:1;min-width:0"><input id="np2" type="password" placeholder="Confirm password" autocomplete="new-password" style="flex:1;min-width:0"><button class="btn" onclick="setPw()">Change</button></div><div class="hint">Password change needs internet.</div>`}
+function saveCfg(){act('saveCfg',{title:$('#ct').value.trim()||'SC Futsal Season 2',sub:$('#cs').value.trim()},'Heading saved ✓')}
+async function setPw(){const a=$('#np').value,b2=$('#np2').value;if(a.length<6)return toast('Min 6 characters');if(a!==b2)return toast('Passwords do not match');if(FQ.length)return toast('Wait for pending sync first');
+  const r=await post('setPw',{pw:a});if(!r.ok)return toast(r.err||'Failed');
+  let OL={};try{OL=JSON.parse(localStorage.olg||'{}')}catch(_){}delete OL[await hh(U.toLowerCase()+'|'+PW)];PW=a;OL[await hh(U.toLowerCase()+'|'+PW)]={role:'admin',team:''};try{localStorage.olg=JSON.stringify(OL)}catch(_){}
+  ss('fds',JSON.stringify({u:U,pw:PW,role:ROLE,team:MYTEAM}));toast('Password changed ✓');aSettings()}
 async function aUsers(){
   $('#ab').innerHTML=`<div class="row"><input id="un2" placeholder="Username" autocomplete="off"><input id="pw2" placeholder="Password" autocomplete="off"><select id="ut">${D.teams.map(t=>`<option value="${t.id}">${esc(t.name)}</option>`).join('')}</select><input type="hidden" id="uid"><button class="btn" onclick="saveUser()">Save</button></div><div id="ul">Loading…</div>`;
   const r=await post('listUsers');UL=r.users||[];if(!$('#ul'))return;
@@ -560,7 +573,7 @@ async function drawLineup(mode,M){
   const logo=(img,t,cx,cy,R)=>{c.save();c.beginPath();c.arc(cx,cy,R,0,7);c.closePath();c.fillStyle='#16203a';c.fill();c.clip();if(img){const k=Math.min(2*R*.86/img.width,2*R*.86/img.height);c.drawImage(img,cx-img.width*k/2,cy-img.height*k/2,img.width*k,img.height*k)}c.restore();
     c.lineWidth=3;c.strokeStyle='rgba(255,255,255,.5)';c.beginPath();c.arc(cx,cy,R,0,7);c.stroke();if(!img){c.fillStyle='#2dff8f';c.font='800 '+R+'px '+HF;c.textAlign='center';c.textBaseline='middle';c.fillText((t.name||'?')[0],cx,cy+2)}};
   c.textBaseline='middle';c.textAlign='center';c.fillStyle='#ffd24a';c.font='800 20px '+HF;
-  c.fillText('SC FUTSAL SEASON 2  ·  MATCHDAY '+M.md+(M.date?'  ·  '+M.date:''),W/2,26);
+  c.fillText(cfgT().toUpperCase()+'  ·  MATCHDAY '+M.md+(M.date?'  ·  '+M.date:''),W/2,26);
   if(both){logo(logoA,M.A,70,78,36);logo(logoB,M.B,W-70,78,36);
     c.fillStyle='#fff';c.font='700 30px '+TNR;c.fillText(fitTxt(c,M.A.name,230),215,78);c.fillText(fitTxt(c,M.B.name,230),W-215,78);
     c.font='900 54px '+HF;c.fillText(M.A.score+'  :  '+M.B.score,W/2,78)}
@@ -588,7 +601,7 @@ async function drawLineup(mode,M){
   let fy=py+ph+34;
   if(both){c.fillText(M.A.name+' — '+subs(M.A).replace('Subs: ','Subs: ').slice(0,170),30,fy);c.fillText(M.B.name+' — '+subs(M.B).slice(0,170),30,fy+34)}
   else wrapTxt(c,subs(TA),30,fy,W-60,30);
-  c.textAlign='right';c.fillStyle='rgba(255,255,255,.4)';c.font='600 16px '+HF;c.fillText('SC Futsal Season 2',W-22,Hh-14);
+  c.textAlign='right';c.fillStyle='rgba(255,255,255,.4)';c.font='600 16px '+HF;c.fillText(cfgT(),W-22,Hh-14);
   return cv.toDataURL('image/png')}
 let DLS={};
 async function openDl(src){DLS.M=src==='ed'?mFromEd():mFromMatch(src);if(!DLS.M)return toast('Add players first');DLS.mode=DLS.M.B&&DLS.M.B.pl.length?'both':(DLS.M.A.pl.length?'A':'B');renderDl()}
@@ -634,7 +647,7 @@ function saveMatch(){
 function setAT(t){AT=t;admR()}
 function logout(){PW='';U='';ROLE='';MYTEAM='';ss('fds','');admR()}
 function editPl(id){var p=D.players.filter(function(x){return S(x.id)===S(id)})[0]||{};$('#pnm').value=p.name||'';$('#pid').value=id}
-Object.assign(window,{setTab:setTab,go:go,pick:pick,openAdm:openAdm,closeAdm:closeAdm,login:login,setAT:setAT,logout:logout,editTeam:editTeam,act:act,saveTeam:saveTeam,editPl:editPl,savePl:savePl,saveMatch:saveMatch,aMatches:aMatches,editM:editM,editUser:editUser,saveUser:saveUser,edSetF:edSetF,edTeam:edTeam,openPick:openPick,pkList:pkList,pickP:pickP,openStat:openStat,stIn:stIn,stp:stp,chg:chg,rmv:rmv,toBench:toBench,closeMd:closeMd,openDl:openDl,dlMode:dlMode});
+Object.assign(window,{setTab:setTab,go:go,pick:pick,openAdm:openAdm,closeAdm:closeAdm,login:login,setAT:setAT,saveCfg:saveCfg,setPw:setPw,logout:logout,editTeam:editTeam,act:act,saveTeam:saveTeam,editPl:editPl,savePl:savePl,saveMatch:saveMatch,aMatches:aMatches,editM:editM,editUser:editUser,saveUser:saveUser,edSetF:edSetF,edTeam:edTeam,openPick:openPick,pkList:pkList,pickP:pickP,openStat:openStat,stIn:stIn,stp:stp,chg:chg,rmv:rmv,toBench:toBench,closeMd:closeMd,openDl:openDl,dlMode:dlMode});
 lbl();net();load();flush();
 })();
 </script><button id="inst" style="display:none;position:fixed;right:10px;bottom:10px;z-index:90;background:#ffd24a;color:#111;font:700 14px system-ui;border:0;border-radius:20px;padding:10px 16px;box-shadow:0 4px 14px #0008">⬇ Install app</button>
