@@ -237,6 +237,11 @@ h1,h2,h3,h4,.logo,.tag,.big,th,.sh,.wtag{font-family:system-ui,Segoe UI,Roboto,A
 .dla{display:inline-block;text-decoration:none}
 #net{position:fixed;left:10px;bottom:10px;z-index:90;background:#c78a00;color:#fff;font:700 13px system-ui,sans-serif;padding:7px 13px;border-radius:18px;display:none;box-shadow:0 4px 14px #0008}#net.on{display:block;animation:netp .4s}#net.off{background:#c0392b}@keyframes netp{from{transform:translateY(20px);opacity:0}}
 #sub{text-align:center;color:var(--mut);font:600 clamp(12px,3vw,15px) 'Times New Roman',serif;letter-spacing:2px;text-transform:uppercase;padding:2px 12px 6px}
+
+.stk .mini{display:none}.lg.mi{width:22px!important;height:22px!important;font-size:12px}
+@media(max-width:959px){.dash>div:first-child{display:contents}.stk{position:sticky;top:56px;z-index:9;background:#070b14f2;backdrop-filter:blur(8px);margin:0 -12px;padding:0 12px 2px}
+.stk.pin .mdbar{transform:scale(.8);transform-origin:center}.stk.pin .mini{display:flex;position:absolute;left:0;right:0;top:100%;align-items:center;justify-content:center;gap:10px;padding:6px 12px;background:#0f1626f2;border-bottom:1px solid #ffffff14;font-size:15px;animation:netp .25s}.stk .mini b{font:900 20px system-ui,sans-serif;color:var(--ac)}.stk .mini span{max-width:30%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}}
+@media(min-width:960px){.dash>div:first-child{position:sticky;top:8px;align-self:start;max-height:calc(100vh - 16px);overflow:auto;scrollbar-width:none}.dash>div:first-child::-webkit-scrollbar{display:none}}
 </style><script>window.onerror=function(m,u,l){var e=document.getElementById("st");if(e){e.style.display="block";e.textContent+=" | "+m+" (line "+l+")"}};window.addEventListener("load",function(){if(window.__fd)return;var e=document.getElementById("st"),m=document.getElementById("mainjs");if(!e)return;e.style.display="block";e.textContent+=" [diag] scripts="+document.scripts.length+" main="+(m?m.text.length+"/"+m.getAttribute("data-len"):"MISSING")+" tail="+(m?JSON.stringify(m.text.slice(-25)):"")});</script></head><body>
 <div id="st" style="background:#ff5d6c;color:#fff;padding:8px 14px;font-size:13px;word-break:break-all">⚠ Page script did not start. Re-copy the FULL index.html (it must end with &lt;/html&gt;) and deploy a New version.</div><div class="top"><div class="tl"><svg class="lgo" viewBox="0 0 48 48" width="40" height="40"><defs><linearGradient id="gg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2dff8f"/><stop offset="1" stop-color="#00c6ff"/></linearGradient></defs><path d="M24 2 43 9v14c0 12-8 20-19 23C13 43 5 35 5 23V9z" fill="#0b1428" stroke="url(#gg)" stroke-width="2.5"/><circle cx="24" cy="24" r="11" fill="#fff"/><path d="M24 17.5l5 3.6-1.9 5.9h-6.2L19 21.1z" fill="#111"/><path d="M24 17.5V13M29 21.1l4.2-1.6M27.1 27l2.6 3.8M20.9 27l-2.6 3.8M19 21.1l-4.2-1.6" stroke="#111" stroke-width="1.6" stroke-linecap="round"/></svg></div><h1 class="ttl">SC Futsal Season 2</h1><div class="tr"><button class="adm-b" id="admb" onclick="openAdm()">🔒 <span class="at">Admin</span></button></div></div>
 <div class="scene"><div class="act ac1"><svg viewBox="0 0 640 150" role="img" aria-label="A player kicks the ball and scores"><defs><linearGradient id="gr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#16a34a"/><stop offset="1" stop-color="#0a5a2b"/></linearGradient></defs>
@@ -257,7 +262,7 @@ h1,h2,h3,h4,.logo,.tag,.big,th,.sh,.wtag{font-family:system-ui,Segoe UI,Roboto,A
 <nav id="nav" class="tabs"><button data-v="dash" class="on">Dashboard</button><button data-v="teams">Teams</button><button data-v="players">Players</button></nav>
 <main id="app"><div class="sk"></div><div class="sk"></div></main>
 <div class="modal" id="adm"></div><div class="modal" id="pk"></div><div class="modal" id="sx"></div><div class="modal" id="dl"></div>
-<script id="mainjs" data-len="46389">
+<script id="mainjs" data-len="46788">
 (function(){
 window.__fd=1;var b=document.getElementById('st');b.style.display='none';b.textContent='';
 const API='https://script.google.com/macros/s/AKfycbwLc2JZW3leBVKkd4GCHD9AlLMzt3cdOLVF7K17ne6crZqm0tymu6xEQx6sR_hiPeyMDw/exec';
@@ -315,11 +320,13 @@ async function load(force){
 function cfgT(){return (D.cfg&&D.cfg.title)||'SC Futsal Season 2'}
 function applyCfg(){const h=$('.ttl');if(!h)return;const t=cfgT(),sb=(D.cfg&&D.cfg.sub)||'';if(h.textContent!==t)h.textContent=t;document.title=t;
   let e=$('#sub');if(!e){e=document.createElement('div');e.id='sub';($('.scene')||h.parentNode.parentNode).insertAdjacentElement('afterend',e)}e.textContent=sb;e.style.display=sb?'block':'none'}
+function pinChk(){const s=$('.stk'),c=$('.mc');if(!s||!c)return;s.classList.toggle('pin',c.getBoundingClientRect().bottom<s.offsetHeight+4)}
+addEventListener('scroll',pinChk,{passive:true});addEventListener('resize',pinChk);
 function render(){
   applyCfg();
   document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===view));
   $('#app').innerHTML=view==='dash'?dash():view==='teams'?teams():players();
-  document.querySelectorAll('[data-c]').forEach(cu);
+  document.querySelectorAll('[data-c]').forEach(cu);pinChk();
 }
 function cu(el){const to=+el.dataset.c,dec=+(el.dataset.d||0),t0=performance.now();
   (function f(t){const p=Math.min(1,(t-t0)/900),e=1-Math.pow(1-p,3);el.textContent=(to*e).toFixed(dec);if(p<1)requestAnimationFrame(f)})(t0)}
@@ -341,9 +348,9 @@ function dash(){
   const sc=t=>{const on=L.filter(l=>S(l.teamId)===S(t.id));
     return on.filter(l=>N(l.goals)).map(l=>`<div>⚽ ${esc(pn(l.playerId))}${N(l.goals)>1?' ×'+N(l.goals):''}</div>`).join('')+on.filter(l=>N(l.assists)).map(l=>`<small>👟 ${esc(pn(l.playerId))}${N(l.assists)>1?' ×'+N(l.assists):''}</small>`).join('')};
   return `<div class="dash ${dir?'dir'+dir:''}"><div>
-  <div class="mdbar rise"><button class="arr" onclick="go(-1)" ${mi<=0?'disabled':''}>‹</button>
+  <div class="stk"><div class="mdbar rise"><button class="arr" onclick="go(-1)" ${mi<=0?'disabled':''}>‹</button>
   <h2>Matchday ${md}</h2>
-  <button class="arr" onclick="go(1)" ${mi>=days.length-1?'disabled':''}>›</button></div>
+  <button class="arr" onclick="go(1)" ${mi>=days.length-1?'disabled':''}>›</button></div><div class="mini">${lg(A,'mi')}<span>${esc(A.name)}</span><b>${N(m.scoreA)} : ${N(m.scoreB)}</b><span>${esc(B.name)}</span>${lg(B,'mi')}</div></div>
   ${ms.length>1?`<div class="chips">${ms.map((x,i)=>`<span class="chip ${i===xi?'on':''}" onclick="pick('x',${i})">${esc(tm(x.teamA).name)} v ${esc(tm(x.teamB).name)}</span>`).join('')}</div>`:''}
   <div class="card mc rise" style="--i:1"><div class="top"><span>${esc(String(m.date||'').slice(0,10))}</span><b>Full-time</b></div>
   <div class="score">${side_(A,wa)}
